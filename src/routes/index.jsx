@@ -7,7 +7,10 @@ import {
   Home,
   Product,
   NewProduct,
-  NotFound
+  NotFound,
+  Supplier,
+  NewSupplier,
+  EditSupplier
 } from '../pages'
 
 
@@ -28,7 +31,10 @@ export default function MainRouter() {
         { element: <Navigate to="/dashboard/home" />, index: true },
         { path: 'home', element: <Home /> },
         { path: 'product', element: <Product />},
-        { path: 'product/new', element: <NewProduct />}
+        { path: 'product/new', element: <NewProduct />},
+        { path: 'supplier', element: <Supplier />},
+        { path: 'supplier/new', element: <NewSupplier />},
+        { path: 'supplier/:id', element: <EditSupplier />},
       ],
     },
     {

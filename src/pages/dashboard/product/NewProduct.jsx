@@ -7,7 +7,6 @@ import { useState } from "react";
 import auth from '../../../helpers/auth'
 import { useNavigate } from "react-router-dom";
 import ProductServices from "../../../services/ProductServices";
-import { Container } from "@mui/material";
 import { numberFormat } from "../../../helpers/number";
 
 const NewProduct = () => {
@@ -44,8 +43,8 @@ const NewProduct = () => {
   }
 
   return(
-    <Container>
-      <Typography component="h1" variant="h5">
+    <Box>
+      <Typography component="h1" align="left" variant="h5">
           Tambah Data Produk
       </Typography>
       <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
@@ -103,7 +102,7 @@ const NewProduct = () => {
           Tambah
         </Button>
       </Box>
-    </Container>
+    </Box>
   )
 
 }

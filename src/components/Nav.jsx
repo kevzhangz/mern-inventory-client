@@ -13,8 +13,9 @@ import ListItemText from '@mui/material/ListItemText';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import AccountCircle from '@mui/icons-material/AccountCircle';
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import auth from '../helpers/auth';
+import { Typography, Grid } from '@mui/material';
 
 import HomeIcon from '@mui/icons-material/Home';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
@@ -24,7 +25,6 @@ import ListAltIcon from '@mui/icons-material/ListAlt';
 
 export default function Navbar(props) {
   const navigate = useNavigate();
-  const [route, setRoute] = React.useState(null)
   const [anchorEl, setAnchorEl] = React.useState(null)
   const drawerWidth = props.drawerWidth
 
@@ -35,16 +35,6 @@ export default function Navbar(props) {
   const handleClose = () => {
     setAnchorEl(null);
   };
-
-  const handleNavigate = (path) => {
-    setRoute(path)
-  }
-
-  React.useEffect(() => {
-    if(route){
-      navigate(route)
-    }
-  })
 
   const navData = [
     {
@@ -79,45 +69,48 @@ export default function Navbar(props) {
       <CssBaseline />
       <AppBar
         position="fixed"
-        sx={{ width: `calc(100% - ${drawerWidth}px)`, ml: `${drawerWidth}px` }}
+        sx={{ width: `calc(100% - ${drawerWidth}px)` }}
       >
-        <Toolbar>
-          <div>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleMenu}
-              color="inherit"
-            >
-              <AccountCircle />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorEl}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorEl)}
-              onClose={handleClose}
-            >
-              <MenuItem onClick={handleClose}>Profile</MenuItem>
-              <MenuItem onClick={handleClose}>My account</MenuItem>
-              <MenuItem onClick={() => {
-                auth.clearJWT(() => {
-                  navigate('/')
-                })
-              }}>Logout</MenuItem>
-            </Menu>
-          </div>
-        </Toolbar>
+          <Toolbar>
+            <Grid container justifyContent='flex-end'>
+              <Grid item>
+                <IconButton
+                  size="large"
+                  aria-label="account of current user"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  onClick={handleMenu}
+                  color="inherit"
+                >
+                  <AccountCircle />
+                </IconButton>
+                <Menu
+                  id="menu-appbar"
+                  anchorEl={anchorEl}
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  open={Boolean(anchorEl)}
+                  onClose={handleClose}
+                >
+                  <MenuItem onClick={handleClose}>Profile</MenuItem>
+                  <MenuItem onClick={handleClose}>My account</MenuItem>
+                  <MenuItem onClick={() => {
+                    auth.clearJWT(() => {
+                      navigate('/')
+                    })
+                  }}>Logout</MenuItem>
+                </Menu>
+              </Grid>
+            </Grid>
+          </Toolbar>
+
       </AppBar>
       <Drawer
         sx={{
@@ -131,12 +124,19 @@ export default function Navbar(props) {
         variant="permanent"
         anchor="left"
       >
-        <Toolbar />
+        <Toolbar>
+          <Typography>
+            Sistem Inventory
+          </Typography>
+        </Toolbar>
         <Divider />
         <List>
           {navData.map((item, index) => (
               <ListItem key={index} disablePadding>
-                <ListItemButton onClick={() => handleNavigate(item.path)}>
+                <ListItemButton 
+                    component={Link}
+                    to={item.path}
+                    selected={location.pathname.includes(item.path)}>
                     <ListItemIcon>
                       {item.icon}
                     </ListItemIcon>
