@@ -7,10 +7,17 @@ import {
   Home,
   Product,
   NewProduct,
+  EditProduct,
   NotFound,
   Supplier,
   NewSupplier,
-  EditSupplier
+  EditSupplier,
+  Purchase,
+  NewPurchase,
+  EditPurchase,
+  Sell,
+  NewSell,
+  EditSell
 } from '../pages'
 
 
@@ -32,9 +39,16 @@ export default function MainRouter() {
         { path: 'home', element: <Home /> },
         { path: 'product', element: <Product />},
         { path: 'product/new', element: <NewProduct />},
+        { path: 'product/:id', element: <EditProduct />},
         { path: 'supplier', element: <Supplier />},
         { path: 'supplier/new', element: <NewSupplier />},
         { path: 'supplier/:id', element: <EditSupplier />},
+        { path: 'purchase', element: <Purchase />},
+        { path: 'purchase/new', element: <NewPurchase />},
+        { path: 'purchase/:id', element: <EditPurchase />},
+        { path: 'sell', element: <Sell />},
+        { path: 'sell/new', element: <NewSell />},
+        { path: 'sell/:id', element: <EditSell />},
       ],
     },
     {

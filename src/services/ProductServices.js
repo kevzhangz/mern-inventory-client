@@ -5,7 +5,23 @@ const listProduct = async (credentials) => {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer + ' + credentials
+        'Authorization': 'Bearer ' + credentials
+      },
+    })
+    return await response.json()
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+const find = async (id, credentials) => {
+  try {
+    let response = await fetch(`${import.meta.env.VITE_API_URL}/api/product/${id}`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + credentials
       },
     })
     return await response.json()
@@ -21,7 +37,7 @@ const create = async (data, credentials) => {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer + ' + credentials
+        'Authorization': 'Bearer ' + credentials
       },
       body: JSON.stringify(data)
     })
@@ -31,7 +47,26 @@ const create = async (data, credentials) => {
   }
 }
 
+const update = async (id, credentials, product) => {
+  try {
+    let response = await fetch(`${import.meta.env.VITE_API_URL}/api/product/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + credentials
+      },
+      body: JSON.stringify(product)
+    })
+    return await response.json()
+  } catch (err) {
+    console.log(err)
+  }
+}
+
 export default {
   create,
-  listProduct
+  update,
+  listProduct,
+  find
 }

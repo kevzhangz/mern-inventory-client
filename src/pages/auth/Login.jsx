@@ -8,7 +8,7 @@ import Container from "@mui/material/Container";
 import { useState } from "react";
 import AuthServices from "../../services/AuthServices";
 import auth from "../../helpers/auth";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link as RouterLink } from "react-router-dom";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -23,16 +23,14 @@ const Login = () => {
     event.preventDefault();
 
     AuthServices.login(values).then(data => {
-      auth.authenticate(data, () => {
-        if(data.error){
-          setValues({...values, error: data.error})
-        } else {
-          setValues({...values, error: '', signedIn: true})
-        }
-      })
-      navigate('/dashboard')
+      if(data.error){
+        setValues({...values, error: data.error})
+      } else {
+        auth.authenticate(data, () => {
+          navigate('/dashboard')
+        })
+      }
     })
-
   };
 
   const handleChange = name => event => {
@@ -54,9 +52,9 @@ const Login = () => {
         </Typography>
         <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
           {
-            values.error && (<Typography component="p" color="error">
+            values.error ? (<Typography component="p" color="error">
               {values.error}
-            </Typography>)
+            </Typography>) : ''
           }
           <TextField
             margin="normal"
@@ -90,7 +88,7 @@ const Login = () => {
           </Button>
           <Grid container>
             <Grid item>
-              <Link href="/register" variant="body2">
+              <Link component={RouterLink} to="/register" variant="body2">
                 {"Belum punya akun? Registrasi di sini!"}
               </Link>
             </Grid>
