@@ -1,8 +1,9 @@
 import { Button, Grid, Typography } from "@mui/material"
 import Table from "./Table"
-import { Link } from "react-router-dom"
 
 const CustomTableView = (props) => {
+  const { handleOpen } = props
+
   return (
     <div>
       <Grid container spacing="1">
@@ -12,7 +13,7 @@ const CustomTableView = (props) => {
           </Typography>
         </Grid>
         <Grid item xs={4}>
-          <Button component={Link} to="new" variant="contained" sx={{ float: 'right' }}>Tambah Data</Button>
+          <Button onClick={() => {handleOpen('create')}} variant="contained" sx={{ float: 'right' }}>Tambah Data</Button>
         </Grid>
       </Grid>
       <Table data={props.data} columns={props.columns}/>

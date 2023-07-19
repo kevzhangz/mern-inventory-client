@@ -1,24 +1,24 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import auth from "../../../helpers/auth";
 import PurchaseForm from "../../../components/PurchaseForm";
 import PurchaseServices from "../../../services/PurchaseServices";
-import auth from "../../../helpers/auth";
 
-const NewPurchase = () => {
+const NewPurchase = (props) => {
+  const { handleClose, setChange } = props
   const token = auth.isAuthenticated().token
-  const navigate = useNavigate();
   const [values, setValues] = useState({
     date: '',
     stock: '',
     price: '',
     error: '',
   })
+
   const [selected, setSelected] = useState({
     supplier: {
-      name: 'Pilih Supplier'
+      name: ''
     },
     product: {
-      name: 'Pilih Barang',
+      name: '',
       price: '',
       stock: ''
     }
@@ -38,7 +38,8 @@ const NewPurchase = () => {
       if(data.error){
         setValues({...values, error: data.error})
       } else {
-        navigate('/dashboard/purchase')
+        setChange(true)
+        handleClose()
       }
     })
   

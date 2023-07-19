@@ -1,12 +1,11 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import auth from '../../../helpers/auth'
 import SellForm from "../../../components/SellForm"
 import SellServices from "../../../services/SellServices";
 
-const NewSell = () => {
+const NewSell = (props) => {
+  const { handleClose, setChange } = props
   const token = auth.isAuthenticated().token
-  const navigate = useNavigate();
   const [values, setValues] = useState({
     name: '',
     date: '',
@@ -14,6 +13,7 @@ const NewSell = () => {
     price: '',
     error: '',
   })
+  
   const [selected, setSelected] = useState({
     product: {
       name: '',
@@ -34,7 +34,8 @@ const NewSell = () => {
       if(data.error){
         setValues({...values, error: data.error})
       } else {
-        navigate('/dashboard/sell')
+        setChange(true)
+        handleClose()
       }
     })
   

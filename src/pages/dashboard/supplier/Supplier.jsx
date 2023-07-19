@@ -1,14 +1,37 @@
 import { useState, useEffect } from 'react';
-import authHelpers from '../../../helpers/auth'
+import { Button } from '@mui/material';
+import auth from '../../../helpers/auth'
 import supplierServices from '../../../services/SupplierServices'
 import CustomTableView from "../../../components/CustomTableView";
-import { Link } from "react-router-dom";
-import { Button } from '@mui/material';
+import CustomDialog from '../../../components/CustomDialog';
+import NewSupplier from './NewSupplier'
+import EditSupplier from './EditSupplier'
 
 const Supplier = () => {
-  const token = authHelpers.isAuthenticated().token
+  const token = auth.isAuthenticated().token
   const [supplier, setSupplier] = useState(Array)
   const [change, setChange] = useState(false)
+
+  const [openCreate, setOpenCreate] = useState(false)
+  const [openEdit, setOpenEdit] = useState(false)
+  const [selectedEdit, setSelectedEdit] = useState()
+
+  const handleOpen = (type, id=null) => {
+    if(type == 'create'){
+      setOpenCreate(true)
+    } else {
+      setSelectedEdit(id)
+      setOpenEdit(true)
+    }
+  };
+
+  const handleClose = (type) => {
+    if(type == 'create'){
+      setOpenCreate(false)
+    } else {
+      setOpenEdit(false)
+    }
+  }
 
   useEffect(() => {
     supplierServices.listSupplier(token).then((data) => {
@@ -36,14 +59,27 @@ const Supplier = () => {
     { field: 'phone_number', headerName: 'No.Telp', flex: 1 },
     { field: 'action', headerName: 'Aksi', flex: 1, renderCell: (params) => {
       return (<>
-        <Button variant="contained" component={Link} to={params.row.id}>Ubah</Button>
+        <Button variant="contained" onClick={() => handleOpen('edit', params.row.id)}>Ubah</Button>
         <Button variant="contained" onClick={() => handleDelete(params.row.id)} style={{ marginLeft: 5 }}>Hapus</Button>
       </>)
     }}
   ];
 
   return(
-    <CustomTableView data={supplier} columns={columns} menu='Supplier' />
+    <div>
+      {/* Supplier List Table */}
+      <CustomTableView data={supplier} columns={columns} handleOpen={handleOpen} menu='Supplier' />
+      <CustomDialog
+        component={<NewSupplier handleClose={() => {handleClose('create')}} setChange={setChange} />} 
+        open={openCreate} 
+        handleClose={() => {handleClose('create')}}
+      />
+      <CustomDialog
+        component={<EditSupplier id={selectedEdit} handleClose={() => {handleClose('edit')}} setChange={setChange} />} 
+        open={openEdit} 
+        handleClose={() => {handleClose('edit')}} 
+      />
+    </div>
   )
 }
 

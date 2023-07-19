@@ -1,17 +1,40 @@
-import * as React from 'react';
-import auth from '../../../helpers/auth'
-import PurchaseServices from "../../../services/PurchaseServices";
-import { numberFormat } from "../../../helpers/number";
-import CustomTableView from "../../../components/CustomTableView";
-import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react'
 import { Button } from '@mui/material';
+import auth from '../../../helpers/auth'
+import { numberFormat } from "../../../helpers/number";
+import PurchaseServices from "../../../services/PurchaseServices";
+import CustomTableView from "../../../components/CustomTableView";
+import CustomDialog from '../../../components/CustomDialog';
+import NewPurchase from './NewPurchase'
+import EditPurchase from './EditPurchase'
 
 const Purchase = () => {
   const token = auth.isAuthenticated().token
-  const [purchase, setPurchase] = React.useState(Array)
-  const [change, setChange] = React.useState(false)
+  const [purchase, setPurchase] = useState(Array)
+  const [change, setChange] = useState(false)
 
-  React.useEffect(() => {
+  const [openCreate, setOpenCreate] = useState(false)
+  const [openEdit, setOpenEdit] = useState(false)
+  const [selectedEdit, setSelectedEdit] = useState()
+
+  const handleOpen = (type, id=null) => {
+    if(type == 'create'){
+      setOpenCreate(true)
+    } else {
+      setSelectedEdit(id)
+      setOpenEdit(true)
+    }
+  };
+
+  const handleClose = (type) => {
+    if(type == 'create'){
+      setOpenCreate(false)
+    } else {
+      setOpenEdit(false)
+    }
+  }
+
+  useEffect(() => {
     PurchaseServices.listPurchase(token).then((data) => {
       if(data.result){
         setPurchase(data.result)
@@ -41,7 +64,7 @@ const Purchase = () => {
     { field: 'action', headerName: 'Aksi', flex: 1, renderCell: params => {
       return(
         <div>
-          <Button variant="contained" component={Link} to={params.row.id}>Ubah</Button>
+          <Button variant="contained" onClick={() => {handleOpen('edit',params.row.id)}}>Ubah</Button>
           <Button variant="contained" onClick={() => handleDelete(params.row.id)} style={{ marginLeft: 5 }}>Hapus</Button>
         </div>
       )
@@ -49,7 +72,19 @@ const Purchase = () => {
   ];
 
   return(
-    <CustomTableView data={purchase} columns={columns} menu='Barang Masuk' />
+    <div>
+      <CustomTableView data={purchase} columns={columns} handleOpen={handleOpen} menu='Barang Masuk' />
+      <CustomDialog
+        component={<NewPurchase handleClose={() => {handleClose('create')}} setChange={setChange} />} 
+        open={openCreate} 
+        handleClose={() => {handleClose('create')}}
+      />
+      <CustomDialog
+        component={<EditPurchase id={selectedEdit} handleClose={() => {handleClose('edit')}} setChange={setChange} />} 
+        open={openEdit} 
+        handleClose={() => {handleClose('edit')}} 
+      />
+    </div>
   )
 }
 

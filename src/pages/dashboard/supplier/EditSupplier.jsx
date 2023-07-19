@@ -1,13 +1,12 @@
 import { useState, useEffect} from "react";
 import auth from '../../../helpers/auth'
-import { useNavigate } from "react-router-dom";
 import SupplierServices from "../../../services/SupplierServices";
 import SupplierForm from "../../../components/SupplierForm";
 
-const EditSupplier = () => {
+const EditSupplier = (props) => {
+  const { id, handleClose, setChange } = props
+
   const token = auth.isAuthenticated().token
-  const id = window.location.pathname.split("/").pop()
-  const navigate = useNavigate();
   const [values, setValues] = useState({
     name: '',
     address: '',
@@ -31,7 +30,8 @@ const EditSupplier = () => {
       if(data.error){
         setValues({...values, error: data.error})
       } else {
-        navigate('/dashboard/supplier')
+        handleClose()
+        setChange(true)
       }
     })
   

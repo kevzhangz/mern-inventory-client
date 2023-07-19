@@ -1,21 +1,20 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import auth from '../../../helpers/auth'
 import { numberFormat } from "../../../helpers/number";
 import PurchaseForm from "../../../components/PurchaseForm";
 import PurchaseServices from "../../../services/PurchaseServices";
 import dayjs from "dayjs";
 
-const EditPurchase = () => {
+const EditPurchase = (props) => {
+  const { id, handleClose, setChange } = props
   const token = auth.isAuthenticated().token
-  const navigate = useNavigate();
-  const id = window.location.pathname.split("/").pop()
   const [values, setValues] = useState({
     date: '',
     stock: '',
     price: '',
     error: '',
   })
+
   const [selected, setSelected] = useState({
     supplier: {
       name: 'Pilih Supplier'
@@ -49,7 +48,8 @@ const EditPurchase = () => {
       if(data.error){
         setValues({...values, error: data.error})
       } else {
-        navigate('/dashboard/purchase')
+        setChange(true)
+        handleClose()
       }
     })
   

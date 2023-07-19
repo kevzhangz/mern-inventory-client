@@ -1,22 +1,48 @@
-import * as React from 'react';
-import productServices from "../../../services/ProductServices";
-import auth from '../../../helpers/auth'
-import { numberFormat } from "../../../helpers/number";
-import CustomTableView from "../../../components/CustomTableView";
+import { useState, useEffect } from "react";
 import { Button } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { numberFormat } from "../../../helpers/number";
+import auth from '../../../helpers/auth'
+import productServices from "../../../services/ProductServices";
+import CustomTableView from "../../../components/CustomTableView";
+import CustomDialog from '../../../components/CustomDialog';
+import NewProduct from "./NewProduct";
+import EditProduct from "./EditProduct";
 
 const Product = () => {
   const token = auth.isAuthenticated().token
-  const [product, setProduct] = React.useState(Array)
+  const [product, setProduct] = useState(Array)
+  const [change, setChange] = useState(false)
 
-  React.useEffect(() => {
+  const [openCreate, setOpenCreate] = useState(false)
+  const [openEdit, setOpenEdit] = useState(false)
+  const [selectedEdit, setSelectedEdit] = useState()
+
+  const handleOpen = (type, id=null) => {
+    if(type == 'create'){
+      setOpenCreate(true)
+    } else {
+      setSelectedEdit(id)
+      setOpenEdit(true)
+    }
+  };
+
+  const handleClose = (type) => {
+    if(type == 'create'){
+      setOpenCreate(false)
+    } else {
+      setOpenEdit(false)
+    }
+  }
+
+  useEffect(() => {
+    console.log('wat')
     productServices.listProduct(token).then((data) => {
       if(data.result){
         setProduct(data.result)
+        setChange(false)
       }
     })
-  }, [token])
+  }, [change, token])
 
   const columns = [
     { field: 'id', headerName: 'ID', width: 100,},
@@ -27,14 +53,27 @@ const Product = () => {
     { field: 'action', headerName: 'Aksi', flex: 1, renderCell: params => {
       return (
         <>
-          <Button variant="contained" component={Link} to={params.row.id}>Ubah</Button>
+          <Button variant="contained" onClick={() => {handleOpen('edit', params.row.id)}}>Ubah</Button>
         </>
       )
     }}
   ];
 
   return(
-    <CustomTableView data={product} columns={columns} menu='Produk' />
+    <div>
+      <CustomTableView data={product} columns={columns} handleOpen={handleOpen} menu='Produk' />
+      <CustomDialog
+        component={<NewProduct handleClose={() => {handleClose('create')}} setChange={setChange} />} 
+        open={openCreate} 
+        handleClose={() => {handleClose('create')}}
+      />
+      <CustomDialog
+        component={<EditProduct id={selectedEdit} handleClose={() => {handleClose('edit')}} setChange={setChange} />} 
+        open={openEdit} 
+        handleClose={() => {handleClose('edit')}} 
+      />
+    </div>
+
   )
 }
 

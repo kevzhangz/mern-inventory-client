@@ -1,12 +1,11 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import auth from '../../../helpers/auth'
 import ProductServices from "../../../services/ProductServices";
 import ProductForm from "../../../components/ProductForm";
 
-const NewProduct = () => {
+const NewProduct = (props) => {
+  const { handleClose, setChange } = props
   const token = auth.isAuthenticated().token
-  const navigate = useNavigate();
   const [values, setValues] = useState({
     name: '',
     brand: '',
@@ -23,7 +22,8 @@ const NewProduct = () => {
       if(data.error){
         setValues({...values, error: data.error})
       } else {
-        navigate('/dashboard/product')
+        setChange(true)
+        handleClose()
       }
     })
   

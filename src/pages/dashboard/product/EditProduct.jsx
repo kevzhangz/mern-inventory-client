@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
-import ProductServices from "../../../services/ProductServices"
 import auth from "../../../helpers/auth"
-import ProductForm from "../../../components/ProductForm"
 import { numberFormat } from "../../../helpers/number"
+import ProductServices from "../../../services/ProductServices"
+import ProductForm from "../../../components/ProductForm"
 
-const EditProduct = () => {
-  const navigate = useNavigate()
-  const id = window.location.pathname.split("/").pop()
+const EditProduct = (props) => {
+  const { id, handleClose, setChange } = props
+
   const token = auth.isAuthenticated().token
   const [values, setValues] = useState({
     name: '',
@@ -34,7 +33,8 @@ const EditProduct = () => {
       if(data.error){
         setValues({...values, error: data.error})
       } else {
-        navigate('/dashboard/product')
+        setChange(true)
+        handleClose()
       }
     })
   };

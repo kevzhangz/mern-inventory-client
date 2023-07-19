@@ -1,15 +1,38 @@
 import { useState, useEffect } from 'react';
-import auth from '../../../helpers/auth'
-import SellServices from "../../../services/SellServices";
-import { numberFormat } from "../../../helpers/number";
-import CustomTableView from "../../../components/CustomTableView";
 import { Button } from '@mui/material';
-import { Link } from 'react-router-dom';
+import auth from '../../../helpers/auth'
+import { numberFormat } from "../../../helpers/number";
+import SellServices from "../../../services/SellServices";
+import CustomTableView from "../../../components/CustomTableView";
+import CustomDialog from '../../../components/CustomDialog';
+import NewSell from './NewSell'
+import EditSell from './EditSell'
 
 const Sell = () => {
   const token = auth.isAuthenticated().token
   const [sell, setSell] = useState(Array)
   const [change, setChange] = useState(false)
+
+  const [openCreate, setOpenCreate] = useState(false)
+  const [openEdit, setOpenEdit] = useState(false)
+  const [selectedEdit, setSelectedEdit] = useState()
+
+  const handleOpen = (type, id=null) => {
+    if(type == 'create'){
+      setOpenCreate(true)
+    } else {
+      setSelectedEdit(id)
+      setOpenEdit(true)
+    }
+  };
+
+  const handleClose = (type) => {
+    if(type == 'create'){
+      setOpenCreate(false)
+    } else {
+      setOpenEdit(false)
+    }
+  }
 
   useEffect(() => {
     SellServices.listSell(token).then((data) => {
@@ -41,7 +64,7 @@ const Sell = () => {
     { field: 'action', headerName: 'Aksi', flex: 1, renderCell: params => {
       return(
         <div>
-          <Button variant="contained" component={Link} to={params.row.id}>Ubah</Button>
+          <Button variant="contained" onClick={() => handleOpen('edit', params.row.id)}>Ubah</Button>
           <Button variant="contained" onClick={() => handleDelete(params.row.id)} style={{ marginLeft: 5 }}>Hapus</Button>
         </div>
       )
@@ -49,7 +72,19 @@ const Sell = () => {
   ];
 
   return(
-    <CustomTableView data={sell} columns={columns} menu='Barang Keluar' />
+    <div>
+      <CustomTableView data={sell} columns={columns} handleOpen={handleOpen} menu='Barang Keluar' />
+      <CustomDialog
+        component={<NewSell handleClose={() => handleClose('create')} setChange={setChange} />} 
+        open={openCreate} 
+        handleClose={() => handleClose('create')}
+      />
+      <CustomDialog
+        component={<EditSell id={selectedEdit} handleClose={() => handleClose('edit')} setChange={setChange} />} 
+        open={openEdit} 
+        handleClose={() => handleClose('edit')} 
+      />
+    </div>
   )
 }
 

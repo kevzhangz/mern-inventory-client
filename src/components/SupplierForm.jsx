@@ -62,7 +62,7 @@ const SupplierForm = (props) => {
           variant="contained"
           sx={{ mt: 3, mb: 2, float: 'left' }}
         >
-        Tambah
+        {action}
         </Button>
       </Box>
     </Box>

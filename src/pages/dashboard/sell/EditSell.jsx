@@ -1,21 +1,21 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import auth from '../../../helpers/auth'
+import { numberFormat } from "../../../helpers/number";
 import SellForm from "../../../components/SellForm"
 import SellServices from "../../../services/SellServices";
 import dayjs from "dayjs";
-import { numberFormat } from "../../../helpers/number";
 
-const NewSell = () => {
+const NewSell = (props) => {
+  const { id, handleClose, setChange } = props
   const token = auth.isAuthenticated().token
-  const id = window.location.pathname.split("/").pop()
-  const navigate = useNavigate();
   const [values, setValues] = useState({
     buyer: '',
     date: '',
     quantity: '',
+    price: '',
     error: '',
   })
+
   const [selected, setSelected] = useState({
     product: {
       name: '',
@@ -23,12 +23,14 @@ const NewSell = () => {
       stock: '',
     }
   })
+
   useEffect(() => {
     SellServices.find(id, token).then(data => {
-      let { buyer, date, quantity, product } = data
+      let { buyer, date, price, quantity, product } = data
       date = dayjs(new Date(date).toISOString())
+      price = numberFormat(price)
       product.price = numberFormat(product.price)
-      setValues({buyer, date, quantity})
+      setValues({buyer, date, quantity, price})
       setSelected({product})
     })
   }, [id, token])
@@ -47,7 +49,8 @@ const NewSell = () => {
       if(data.error){
         setValues({...values, error: data.error})
       } else {
-        navigate('/dashboard/sell')
+        setChange(true)
+        handleClose()
       }
     })
   };

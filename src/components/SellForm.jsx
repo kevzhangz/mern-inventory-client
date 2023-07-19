@@ -63,96 +63,95 @@ const SellForm = (props) => {
             {values.error}
           </Typography>) : ''
         }
-        <Grid container>
-          <Grid item xs={9}>
-            <Grid item xs={3}>
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                name="buyer"
-                label="Nama Pembeli"
-                id="buyer"
-                autoComplete="buyer"
-                onChange={handleChange('buyer')}
-                value={values.buyer}
-              />
-            </Grid>
-            <Grid item xs={5} sx={{ marginTop: '20px' }}>
-              <Autocomplete
-                freeSolo
-                name="product"
-                onChange={handleChange('product')}
-                id="controllable-product"
-                isOptionEqualToValue={(option) => option == selected.product}
-                options={productOptions.map(options => options.name)}
-                sx={{ width: 300 }}
-                renderInput={(params) => <TextField {...params} label="Product" />}
-                value={selected.product.name}
-                disableClearable
-                forcePopupIcon
-              />
-            </Grid>
-            <Grid item xs={5} sx={{ marginTop: '10px' }}>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DemoContainer components={['DatePicker']}>
-                  <DatePicker
-                    label="Tanggal"
-                    name="date"
-                    inputFormat="YYYY-MM-DD"
-                    id="date"
-                    value={values.date}
-                    onChange={handleChange('date')}
-                    slotProps={{ textField: { variant: 'outlined', error: false } }}
-                  />
-                </DemoContainer>
-              </LocalizationProvider>
-            </Grid>
-            <Grid item xs={3} md={2} lg={1}>
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                name="stock"
-                label="Stock"
-                id="stock"
-                type="number"
-                autoComplete="stock"
-                disabled
-                value={selected.product.stock || 0}
-                InputProps={{ inputProps: { min: 0 } }}
-              />
-            </Grid>
-            <Grid item md={3} lg={2} xs={4}>
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                name="quantity"
-                label="Jumlah Beli"
-                id="quantity"
-                type="number"
-                autoComplete="quantity"
-                disabled={action == 'Ubah'}
-                onChange={handleChange('quantity')}
-                value={values.quantity}
-                InputProps={{ inputProps: { min: 1 } }}
-              />
-            </Grid>
-            <Grid item xs={3}>
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                name="price"
-                label="Harga"
-                id="price"
-                autoComplete="price"
-                onChange={handleChange('price')}
-                value={selected.product.price || ''}
-                disabled
-              />
-            </Grid>
+        <Grid container columnSpacing={2}>
+          <Grid item xs={7}>
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="buyer"
+              label="Nama Pembeli"
+              id="buyer"
+              autoComplete="buyer"
+              onChange={handleChange('buyer')}
+              value={values.buyer}
+            />
+          </Grid>
+          <Grid item xs={12} sx={{ marginTop: '10px' }}>
+            <Autocomplete
+              freeSolo
+              name="product"
+              onChange={handleChange('product')}
+              id="controllable-product"
+              isOptionEqualToValue={(option) => option == selected.product}
+              options={productOptions.map(options => options.name)}
+              sx={{ width: 300 }}
+              renderInput={(params) => <TextField {...params} label="Product" />}
+              value={selected.product.name}
+              disableClearable
+              forcePopupIcon
+              disabled={action == 'Ubah'}
+            />
+          </Grid>
+          <Grid item xs={12} sx={{ marginTop: '10px', marginBottom: '10px' }}>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DemoContainer components={['DatePicker']}>
+                <DatePicker
+                  label="Tanggal"
+                  name="date"
+                  inputFormat="YYYY-MM-DD"
+                  id="date"
+                  value={values.date}
+                  onChange={handleChange('date')}
+                  slotProps={{ textField: { variant: 'outlined', error: false } }}
+                />
+              </DemoContainer>
+            </LocalizationProvider>
+          </Grid>
+          <Grid item xs={3}>
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="stock"
+              label="Stock"
+              id="stock"
+              type="number"
+              autoComplete="stock"
+              disabled
+              value={selected.product.stock || 0}
+              InputProps={{ inputProps: { min: 0 } }}
+            />
+          </Grid>
+          <Grid item xs={3}>
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="quantity"
+              label="Jumlah Beli"
+              id="quantity"
+              type="number"
+              autoComplete="quantity"
+              disabled={action == 'Ubah'}
+              onChange={handleChange('quantity')}
+              value={values.quantity}
+              InputProps={{ inputProps: { min: 1 } }}
+            />
+          </Grid>
+          <Grid item xs={4}>
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="price"
+              label="Harga"
+              id="price"
+              autoComplete="price"
+              onChange={handleChange('price')}
+              value={action == 'Ubah' ? values.price : selected.product.price }
+              disabled
+            />
           </Grid>
         </Grid>
         <Button
