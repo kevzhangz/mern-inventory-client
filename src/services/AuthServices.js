@@ -47,9 +47,27 @@ const logout = async () => {
   }
 }
 
+const update = async (id, token, data) => {
+  try {
+    let response = await fetch(`${import.meta.env.VITE_API_URL}/api/users/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      },
+      body: JSON.stringify(data)
+    })
+    return await response.json()
+  } catch (err) {
+    console.log(err)
+  }
+}
+
 
 export default {
   register,
   login,
-  logout
+  logout,
+  update
 }

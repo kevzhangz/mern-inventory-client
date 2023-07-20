@@ -5,6 +5,7 @@ import {
   Login,
   Register,
   Home,
+  EditProfile,
   Product,
   Supplier,
   Purchase,
@@ -33,6 +34,7 @@ export default function MainRouter() {
       children: [
         { element: <Navigate to="/dashboard/home" />, index: true },
         { path: 'home', element: <Home /> },
+        { path: 'profile/edit', element: <EditProfile />},
         { path: 'product', element: <Product />},
         { path: 'supplier', element: <Supplier />},
         { path: 'purchase', element: <Purchase />},
