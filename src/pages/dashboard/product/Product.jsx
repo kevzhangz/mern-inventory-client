@@ -35,7 +35,6 @@ const Product = () => {
   }
 
   useEffect(() => {
-    console.log('wat')
     productServices.listProduct(token).then((data) => {
       if(data.result){
         setProduct(data.result)
